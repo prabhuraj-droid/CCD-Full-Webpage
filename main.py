@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import shutil
 import os
 import json
@@ -27,25 +28,43 @@ PDF_FOLDER = "PDF"
 PASM_FOLDER = "PASM"
 
 PHOTO_DB = "photos.json"
-PDF_DB = "pdfs.json"
+PDF_DB = "pdf.json"
 PASM_DB = "pasm.json"
 
+# Create folders if not exists
 os.makedirs(PHOTO_FOLDER, exist_ok=True)
 os.makedirs(PDF_FOLDER, exist_ok=True)
 os.makedirs(PASM_FOLDER, exist_ok=True)
+
+# Create JSON files if not exists
+for db_file in [PHOTO_DB, PDF_DB, PASM_DB]:
+    if not os.path.exists(db_file):
+        with open(db_file, "w") as f:
+            json.dump([], f)
 
 # ===========================
 # COMMON FUNCTIONS
 # ===========================
 def load_json(file):
-    if not os.path.exists(file):
+    try:
+        with open(file, "r") as f:
+            return json.load(f)
+    except:
         return []
-    with open(file, "r") as f:
-        return json.load(f)
+
 
 def save_json(file, data):
     with open(file, "w") as f:
         json.dump(data, f, indent=4)
+
+
+# ===========================
+# HOME ROUTE
+# ===========================
+@app.get("/")
+async def home():
+    return FileResponse("frontend/index.html")
+
 
 # ===========================
 # 📸 PHOTO APIs
@@ -75,7 +94,13 @@ async def upload_photo(
 
     save_json(PHOTO_DB, db)
 
-    return {"message": "Photo uploaded"}
+    return {"message": "Photo uploaded successfully"}
+
+
+# Get Photos
+@app.get("/photos-list/")
+def get_photos():
+    return load_json(PHOTO_DB)
 
 
 # Edit Photo
@@ -88,30 +113,33 @@ async def edit_photo(
 ):
     db = load_json(PHOTO_DB)
 
-    # Find the photo in database
-    photo_index = next((i for i, p in enumerate(db) if p["filename"] == filename), None)
+    photo_index = next(
+        (i for i, p in enumerate(db) if p["filename"] == filename),
+        None
+    )
 
     if photo_index is None:
         raise HTTPException(status_code=404, detail="Photo not found")
 
-    # Keep the original created_at timestamp
-    created_at = db[photo_index].get("created_at", datetime.now().isoformat())
+    created_at = db[photo_index].get(
+        "created_at",
+        datetime.now().isoformat()
+    )
 
-    # Update photo file if new file is provided
     new_filename = filename
+
     if file:
-        # Delete old file
         old_file_path = os.path.join(PHOTO_FOLDER, filename)
+
         if os.path.exists(old_file_path):
             os.remove(old_file_path)
 
-        # Save new file
         new_filename = file.filename
         new_file_path = os.path.join(PHOTO_FOLDER, new_filename)
+
         with open(new_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-    # Update database entry
     db[photo_index] = {
         "filename": new_filename,
         "title": title,
@@ -122,32 +150,32 @@ async def edit_photo(
 
     save_json(PHOTO_DB, db)
 
-    return {"message": "Photo updated", "filename": new_filename}
-
-
-# Get Photos
-@app.get("/photos-list/")
-def get_photos():
-    return load_json(PHOTO_DB)
+    return {
+        "message": "Photo updated successfully",
+        "filename": new_filename
+    }
 
 
 # Delete Photo
 @app.delete("/delete/{filename}")
 def delete_photo(filename: str):
+
     file_path = os.path.join(PHOTO_FOLDER, filename)
 
     if os.path.exists(file_path):
         os.remove(file_path)
 
     db = load_json(PHOTO_DB)
+
     db = [p for p in db if p["filename"] != filename]
+
     save_json(PHOTO_DB, db)
 
-    return {"message": "Photo deleted"}
+    return {"message": "Photo deleted successfully"}
 
 
 # ===========================
-# 📄 PDF APIs (E-News Papers)
+# 📄 PDF APIs
 # ===========================
 
 # Upload PDF
@@ -176,7 +204,13 @@ async def upload_pdf(
 
     save_json(PDF_DB, db)
 
-    return {"message": "PDF uploaded"}
+    return {"message": "PDF uploaded successfully"}
+
+
+# Get PDFs
+@app.get("/pdf-list/")
+def get_pdfs():
+    return load_json(PDF_DB)
 
 
 # Edit PDF
@@ -190,30 +224,33 @@ async def edit_pdf(
 ):
     db = load_json(PDF_DB)
 
-    # Find the PDF in database
-    pdf_index = next((i for i, p in enumerate(db) if p["filename"] == filename), None)
+    pdf_index = next(
+        (i for i, p in enumerate(db) if p["filename"] == filename),
+        None
+    )
 
     if pdf_index is None:
         raise HTTPException(status_code=404, detail="PDF not found")
 
-    # Keep the original created_at timestamp
-    created_at = db[pdf_index].get("created_at", datetime.now().isoformat())
+    created_at = db[pdf_index].get(
+        "created_at",
+        datetime.now().isoformat()
+    )
 
-    # Update PDF file if new file is provided
     new_filename = filename
+
     if file:
-        # Delete old file
         old_file_path = os.path.join(PDF_FOLDER, filename)
+
         if os.path.exists(old_file_path):
             os.remove(old_file_path)
 
-        # Save new file
         new_filename = file.filename
         new_file_path = os.path.join(PDF_FOLDER, new_filename)
+
         with open(new_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-    # Update database entry
     db[pdf_index] = {
         "filename": new_filename,
         "title": title,
@@ -225,28 +262,28 @@ async def edit_pdf(
 
     save_json(PDF_DB, db)
 
-    return {"message": "PDF updated", "filename": new_filename}
-
-
-# Get PDFs
-@app.get("/pdf-list/")
-def get_pdfs():
-    return load_json(PDF_DB)
+    return {
+        "message": "PDF updated successfully",
+        "filename": new_filename
+    }
 
 
 # Delete PDF
 @app.delete("/delete-pdf/{filename}")
 def delete_pdf(filename: str):
+
     file_path = os.path.join(PDF_FOLDER, filename)
 
     if os.path.exists(file_path):
         os.remove(file_path)
 
     db = load_json(PDF_DB)
+
     db = [p for p in db if p["filename"] != filename]
+
     save_json(PDF_DB, db)
 
-    return {"message": "PDF deleted"}
+    return {"message": "PDF deleted successfully"}
 
 
 # ===========================
@@ -279,7 +316,13 @@ async def upload_pasm(
 
     save_json(PASM_DB, db)
 
-    return {"message": "PASM uploaded"}
+    return {"message": "PASM uploaded successfully"}
+
+
+# Get PASM
+@app.get("/pasm-list/")
+def get_pasm():
+    return load_json(PASM_DB)
 
 
 # Edit PASM
@@ -293,30 +336,33 @@ async def edit_pasm(
 ):
     db = load_json(PASM_DB)
 
-    # Find the PASM in database
-    pasm_index = next((i for i, p in enumerate(db) if p["filename"] == filename), None)
+    pasm_index = next(
+        (i for i, p in enumerate(db) if p["filename"] == filename),
+        None
+    )
 
     if pasm_index is None:
         raise HTTPException(status_code=404, detail="PASM not found")
 
-    # Keep the original created_at timestamp
-    created_at = db[pasm_index].get("created_at", datetime.now().isoformat())
+    created_at = db[pasm_index].get(
+        "created_at",
+        datetime.now().isoformat()
+    )
 
-    # Update PASM file if new file is provided
     new_filename = filename
+
     if file:
-        # Delete old file
         old_file_path = os.path.join(PASM_FOLDER, filename)
+
         if os.path.exists(old_file_path):
             os.remove(old_file_path)
 
-        # Save new file
         new_filename = file.filename
         new_file_path = os.path.join(PASM_FOLDER, new_filename)
+
         with open(new_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-    # Update database entry
     db[pasm_index] = {
         "filename": new_filename,
         "title": title,
@@ -328,42 +374,58 @@ async def edit_pasm(
 
     save_json(PASM_DB, db)
 
-    return {"message": "PASM updated", "filename": new_filename}
-
-
-# Get PASM
-@app.get("/pasm-list/")
-def get_pasm():
-    return load_json(PASM_DB)
+    return {
+        "message": "PASM updated successfully",
+        "filename": new_filename
+    }
 
 
 # Delete PASM
 @app.delete("/delete-pasm/{filename}")
 def delete_pasm(filename: str):
+
     file_path = os.path.join(PASM_FOLDER, filename)
 
     if os.path.exists(file_path):
         os.remove(file_path)
 
     db = load_json(PASM_DB)
+
     db = [p for p in db if p["filename"] != filename]
+
     save_json(PASM_DB, db)
 
-    return {"message": "PASM deleted"}
+    return {"message": "PASM deleted successfully"}
 
 
 # ===========================
 # STATIC FILES
 # ===========================
 
-# Serve images
-app.mount("/photos", StaticFiles(directory=PHOTO_FOLDER), name="photos")
+# Serve uploaded photos
+app.mount(
+    "/photos",
+    StaticFiles(directory=PHOTO_FOLDER),
+    name="photos"
+)
 
-# Serve PDFs (E-News Papers)
-app.mount("/pdfs", StaticFiles(directory=PDF_FOLDER), name="pdfs")
+# Serve uploaded PDFs
+app.mount(
+    "/pdfs",
+    StaticFiles(directory=PDF_FOLDER),
+    name="pdfs"
+)
 
-# Serve PASM PDFs
-app.mount("/pasm", StaticFiles(directory=PASM_FOLDER), name="pasm")
+# Serve uploaded PASM files
+app.mount(
+    "/pasm",
+    StaticFiles(directory=PASM_FOLDER),
+    name="pasm"
+)
 
-# Serve frontend
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+# Serve frontend files
+app.mount(
+    "/",
+    StaticFiles(directory="frontend", html=True),
+    name="frontend"
+)
