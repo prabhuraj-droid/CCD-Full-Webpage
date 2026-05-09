@@ -2,12 +2,8 @@
 // CONFIG
 // ===============================
 
-// Auto detect local / deployed backend
-const API_BASE =
-    window.location.hostname === "127.0.0.1" ||
-    window.location.hostname === "localhost"
-        ? "http://127.0.0.1:8000"
-        : window.location.origin;
+// Render backend URL
+const API_BASE = "https://YOUR-RENDER-BACKEND.onrender.com";
 
 // ===============================
 // STATE
@@ -19,10 +15,12 @@ let currentSort = "date-desc";
 let editingPhoto = null;
 
 // ===============================
-// TOAST NOTIFICATION SYSTEM
+// TOAST NOTIFICATION
 // ===============================
 function showToast(message, type = "success") {
+
     const toast = document.createElement("div");
+
     toast.className = `toast toast-${type}`;
 
     const icon =
@@ -44,6 +42,7 @@ function showToast(message, type = "success") {
     }, 10);
 
     setTimeout(() => {
+
         toast.classList.remove("show");
 
         setTimeout(() => {
@@ -91,19 +90,30 @@ const sortSelect = document.getElementById("sortSelect");
 // LOGIN
 // ===============================
 if (adminLoginBtn) {
+
     adminLoginBtn.onclick = () => {
+
         loginModal.style.display = "block";
     };
 }
 
 if (loginForm) {
+
     loginForm.addEventListener("submit", (e) => {
+
         e.preventDefault();
 
-        const u = document.getElementById("username").value;
-        const p = document.getElementById("password").value;
+        const username =
+            document.getElementById("username").value;
 
-        if (u === "admin" && p === "nlcil@2026") {
+        const password =
+            document.getElementById("password").value;
+
+        if (
+            username === "admin" &&
+            password === "nlcil@2026"
+        ) {
+
             isAdmin = true;
 
             if (adminControls) {
@@ -112,25 +122,37 @@ if (loginForm) {
 
             loginModal.style.display = "none";
 
-            showToast("Login successful!", "success");
+            showToast(
+                "Login successful!",
+                "success"
+            );
 
             loadPhotos();
 
         } else {
-            showToast("Invalid username or password", "error");
+
+            showToast(
+                "Invalid username or password",
+                "error"
+            );
         }
     });
 }
 
 if (logoutBtn) {
+
     logoutBtn.onclick = () => {
+
         isAdmin = false;
 
         if (adminControls) {
             adminControls.style.display = "none";
         }
 
-        showToast("Logged out successfully", "info");
+        showToast(
+            "Logged out successfully",
+            "info"
+        );
 
         loadPhotos();
     };
@@ -140,11 +162,19 @@ if (logoutBtn) {
 // VIEW SWITCH
 // ===============================
 if (gridViewBtn) {
-    gridViewBtn.onclick = () => switchView("grid");
+
+    gridViewBtn.onclick = () => {
+
+        switchView("grid");
+    };
 }
 
 if (listViewBtn) {
-    listViewBtn.onclick = () => switchView("list");
+
+    listViewBtn.onclick = () => {
+
+        switchView("list");
+    };
 }
 
 function switchView(view) {
@@ -157,15 +187,15 @@ function switchView(view) {
 
         photoContainer.className = "photo-grid";
 
-        if (gridViewBtn) gridViewBtn.classList.add("active");
-        if (listViewBtn) listViewBtn.classList.remove("active");
+        gridViewBtn.classList.add("active");
+        listViewBtn.classList.remove("active");
 
     } else {
 
         photoContainer.className = "photo-list";
 
-        if (listViewBtn) listViewBtn.classList.add("active");
-        if (gridViewBtn) gridViewBtn.classList.remove("active");
+        listViewBtn.classList.add("active");
+        gridViewBtn.classList.remove("active");
     }
 }
 
@@ -173,11 +203,18 @@ function switchView(view) {
 // SORTING
 // ===============================
 if (sortSelect) {
-    sortSelect.addEventListener("change", (e) => {
-        currentSort = e.target.value;
-        sortPhotos();
-        renderPhotos();
-    });
+
+    sortSelect.addEventListener(
+        "change",
+        (e) => {
+
+            currentSort = e.target.value;
+
+            sortPhotos();
+
+            renderPhotos();
+        }
+    );
 }
 
 function sortPhotos() {
@@ -185,28 +222,39 @@ function sortPhotos() {
     switch (currentSort) {
 
         case "name-asc":
+
             photos.sort((a, b) =>
                 a.title.localeCompare(b.title)
             );
+
             break;
 
         case "name-desc":
+
             photos.sort((a, b) =>
                 b.title.localeCompare(a.title)
             );
+
             break;
 
         case "date-asc":
+
             photos.sort((a, b) =>
-                new Date(a.created_at) - new Date(b.created_at)
+                new Date(a.created_at) -
+                new Date(b.created_at)
             );
+
             break;
 
         case "date-desc":
+
         default:
+
             photos.sort((a, b) =>
-                new Date(b.created_at) - new Date(a.created_at)
+                new Date(b.created_at) -
+                new Date(a.created_at)
             );
+
             break;
     }
 }
@@ -218,15 +266,23 @@ async function loadPhotos() {
 
     try {
 
-        const res = await fetch(`${API_BASE}/photos-list/`);
+        const response = await fetch(
+            `${API_BASE}/photos-list/`
+        );
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch photos");
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load photos"
+            );
         }
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (!Array.isArray(data) || data.length === 0) {
+        if (
+            !Array.isArray(data) ||
+            data.length === 0
+        ) {
 
             if (emptyState) {
                 emptyState.style.display = "block";
@@ -244,24 +300,39 @@ async function loadPhotos() {
         }
 
         photos = data.map((photo, index) => ({
+
             id: index + 1,
-            title: photo.title || photo.filename,
+
+            title:
+                photo.title || photo.filename,
+
             description:
-                photo.description || "No description available",
-            imageUrl: `${API_BASE}${photo.url}`,
-            filename: photo.filename,
+                photo.description ||
+                "No description available",
+
+            imageUrl:
+                `${API_BASE}${photo.url}`,
+
+            filename:
+                photo.filename,
+
             created_at:
-                photo.created_at || new Date().toISOString()
+                photo.created_at ||
+                new Date().toISOString()
         }));
 
         sortPhotos();
+
         renderPhotos();
 
-    } catch (err) {
+    } catch (error) {
 
-        console.error(err);
+        console.error(error);
 
-        showToast("Failed to load photos", "error");
+        showToast(
+            "Failed to load photos",
+            "error"
+        );
     }
 }
 
@@ -274,7 +345,7 @@ function renderPhotos() {
 
     photoContainer.innerHTML = photos.map(photo => `
 
-        <div class="photo-card" data-id="${photo.id}">
+        <div class="photo-card">
 
             <img
                 src="${photo.imageUrl}"
@@ -290,9 +361,13 @@ function renderPhotos() {
 
             <div class="photo-info">
 
-                <h3>${escapeHtml(photo.title)}</h3>
+                <h3>
+                    ${escapeHtml(photo.title)}
+                </h3>
 
-                <p>${escapeHtml(photo.description)}</p>
+                <p>
+                    ${escapeHtml(photo.description)}
+                </p>
 
                 ${isAdmin ? `
 
@@ -307,7 +382,6 @@ function renderPhotos() {
                             ${JSON.stringify(photo.description)}
                         )'
                     >
-                        <i class="fas fa-edit"></i>
                         Edit
                     </button>
 
@@ -318,7 +392,6 @@ function renderPhotos() {
                             ${JSON.stringify(photo.filename)}
                         )'
                     >
-                        <i class="fas fa-trash"></i>
                         Delete
                     </button>
 
@@ -352,21 +425,13 @@ function escapeHtml(text) {
 // ===============================
 function openViewer(src, title, desc) {
 
-    if (!viewerModal) return;
-
     viewerModal.style.display = "block";
 
-    if (viewerImage) {
-        viewerImage.src = src;
-    }
+    viewerImage.src = src;
 
-    if (viewerTitle) {
-        viewerTitle.textContent = title;
-    }
+    viewerTitle.textContent = title;
 
-    if (viewerDescription) {
-        viewerDescription.textContent = desc;
-    }
+    viewerDescription.textContent = desc;
 }
 
 // ===============================
@@ -374,28 +439,35 @@ function openViewer(src, title, desc) {
 // ===============================
 if (photoFile) {
 
-    photoFile.addEventListener("change", () => {
+    photoFile.addEventListener(
+        "change",
+        () => {
 
-        const file = photoFile.files[0];
+            const file =
+                photoFile.files[0];
 
-        if (!file) return;
+            if (!file) return;
 
-        const reader = new FileReader();
+            const reader =
+                new FileReader();
 
-        reader.onload = () => {
+            reader.onload = () => {
 
-            photoPreview.innerHTML =
-                `<img src="${reader.result}">`;
+                photoPreview.innerHTML =
+                    `<img src="${reader.result}">`;
 
-            photoPreview.classList.add("active");
-        };
+                photoPreview.classList.add(
+                    "active"
+                );
+            };
 
-        reader.readAsDataURL(file);
-    });
+            reader.readAsDataURL(file);
+        }
+    );
 }
 
 // ===============================
-// OPEN ADD MODAL
+// ADD PHOTO MODAL
 // ===============================
 if (addPhotoBtn) {
 
@@ -404,11 +476,14 @@ if (addPhotoBtn) {
         editingPhoto = null;
 
         photoModalTitle.innerHTML =
-            '<i class="fas fa-plus"></i> Add Photo';
+            "Add Photo";
 
         photoForm.reset();
 
-        photoPreview.classList.remove("active");
+        photoPreview.classList.remove(
+            "active"
+        );
+
         photoPreview.innerHTML = "";
 
         photoFile.required = true;
@@ -418,21 +493,30 @@ if (addPhotoBtn) {
 }
 
 // ===============================
-// OPEN EDIT MODAL
+// EDIT PHOTO MODAL
 // ===============================
-function openEditPhotoModal(filename, title, description) {
+function openEditPhotoModal(
+    filename,
+    title,
+    description
+) {
 
     editingPhoto = filename;
 
     photoModalTitle.innerHTML =
-        '<i class="fas fa-edit"></i> Edit Photo';
+        "Edit Photo";
 
     photoTitle.value = title;
-    photoDescription.value = description;
+
+    photoDescription.value =
+        description;
 
     photoFile.required = false;
 
-    photoPreview.classList.remove("active");
+    photoPreview.classList.remove(
+        "active"
+    );
+
     photoPreview.innerHTML = "";
 
     photoModal.style.display = "block";
@@ -443,87 +527,120 @@ function openEditPhotoModal(filename, title, description) {
 // ===============================
 if (photoForm) {
 
-    photoForm.addEventListener("submit", async (e) => {
+    photoForm.addEventListener(
+        "submit",
+        async (e) => {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        if (!editingPhoto && !photoFile.files[0]) {
-            showToast("Please select an image", "error");
-            return;
-        }
+            if (
+                !editingPhoto &&
+                !photoFile.files[0]
+            ) {
 
-        const formData = new FormData();
-
-        if (photoFile.files[0]) {
-            formData.append("file", photoFile.files[0]);
-        }
-
-        formData.append("title", photoTitle.value);
-        formData.append("description", photoDescription.value);
-
-        try {
-
-            let res;
-
-            if (editingPhoto) {
-
-                res = await fetch(
-                    `${API_BASE}/edit-photo/${editingPhoto}`,
-                    {
-                        method: "PUT",
-                        body: formData
-                    }
+                showToast(
+                    "Please select an image",
+                    "error"
                 );
 
-            } else {
+                return;
+            }
 
-                res = await fetch(
-                    `${API_BASE}/upload/`,
-                    {
-                        method: "POST",
-                        body: formData
-                    }
+            const formData =
+                new FormData();
+
+            if (photoFile.files[0]) {
+
+                formData.append(
+                    "file",
+                    photoFile.files[0]
                 );
             }
 
-            if (!res.ok) {
+            formData.append(
+                "title",
+                photoTitle.value
+            );
 
-                const errorText = await res.text();
+            formData.append(
+                "description",
+                photoDescription.value
+            );
 
-                console.error(errorText);
+            try {
 
-                throw new Error(errorText);
+                let response;
+
+                if (editingPhoto) {
+
+                    response =
+                        await fetch(
+                            `${API_BASE}/edit-photo/${editingPhoto}`,
+                            {
+                                method: "PUT",
+                                body: formData
+                            }
+                        );
+
+                } else {
+
+                    response =
+                        await fetch(
+                            `${API_BASE}/upload/`,
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+                }
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    console.error(
+                        errorText
+                    );
+
+                    throw new Error(
+                        errorText
+                    );
+                }
+
+                showToast(
+                    editingPhoto
+                        ? "Photo updated successfully!"
+                        : "Photo uploaded successfully!",
+                    "success"
+                );
+
+                photoForm.reset();
+
+                photoPreview.classList.remove(
+                    "active"
+                );
+
+                photoModal.style.display =
+                    "none";
+
+                editingPhoto = null;
+
+                loadPhotos();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    editingPhoto
+                        ? "Failed to update photo"
+                        : "Failed to upload photo",
+                    "error"
+                );
             }
-
-            showToast(
-                editingPhoto
-                    ? "Photo updated successfully!"
-                    : "Photo uploaded successfully!",
-                "success"
-            );
-
-            photoForm.reset();
-
-            photoPreview.classList.remove("active");
-
-            photoModal.style.display = "none";
-
-            editingPhoto = null;
-
-            loadPhotos();
-
-        } catch (err) {
-
-            console.error(err);
-
-            showToast(
-                editingPhoto
-                    ? "Failed to update photo"
-                    : "Failed to upload photo",
-                "error"
-            );
         }
-    });
+    );
 }
 
 // ===============================
@@ -531,28 +648,26 @@ if (photoForm) {
 // ===============================
 async function deletePhoto(filename) {
 
-    if (!confirm(
+    const confirmDelete = confirm(
         "Are you sure you want to delete this photo?"
-    )) {
-        return;
-    }
+    );
+
+    if (!confirmDelete) return;
 
     try {
 
-        const res = await fetch(
+        const response = await fetch(
             `${API_BASE}/delete/${filename}`,
             {
                 method: "DELETE"
             }
         );
 
-        if (!res.ok) {
+        if (!response.ok) {
 
-            const errorText = await res.text();
-
-            console.error(errorText);
-
-            throw new Error(errorText);
+            throw new Error(
+                "Failed to delete photo"
+            );
         }
 
         showToast(
@@ -562,9 +677,9 @@ async function deletePhoto(filename) {
 
         loadPhotos();
 
-    } catch (err) {
+    } catch (error) {
 
-        console.error(err);
+        console.error(error);
 
         showToast(
             "Failed to delete photo",
@@ -576,13 +691,17 @@ async function deletePhoto(filename) {
 // ===============================
 // CLOSE MODALS
 // ===============================
-document.querySelectorAll(".close").forEach(btn => {
+document.querySelectorAll(".close")
+.forEach(button => {
 
-    btn.onclick = () => {
+    button.onclick = () => {
 
-        document.querySelectorAll(".modal").forEach(m => {
-            m.style.display = "none";
-        });
+        document
+            .querySelectorAll(".modal")
+            .forEach(modal => {
+
+                modal.style.display = "none";
+            });
 
         editingPhoto = null;
     };
