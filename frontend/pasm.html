@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="media-styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>PASM - NLC India Limited</title>
+<link rel="icon" type="image/png" href="images/logo2.png">
+</head>
+
+<body>
+
+<header>
+<div class="container">
+<img src="images/logo.png" alt="NLC Logo" class="logoimg">
+<div class="logo">
+    <div class="text">
+                     <p style="font-size: 16px;font-family: 'Poppins', sans-serif;">NLC India Limited</h4>
+        <p style="font-size: 14px;">('Navratna' - Government of India Enterprise)</p>
+        <p style="font-size: 18px;font-family: 'Poppins', sans-serif;">CORPORATE COMMUNICATIONS DEPARTMENT</p>
+                </div>
+</div>
+<a href="index.html" class="back-btn">Back</a>
+</div>
+</header>
+
+<section class="media-section">
+
+
+<!-- Search Bar -->
+<div class="search-container">
+<div class="search-box">
+<i class="fas fa-search search-icon"></i>
+<input type="text" id="searchInput" class="search-input" placeholder="Search by title, description, or date...">
+<button id="clearSearch" class="clear-search" style="display: none;">
+<i class="fas fa-times"></i>
+</button>
+</div>
+</div>
+
+
+
+<div class="media-header">
+<h1>PASM</h1>
+<div class="header-controls">
+<div class="sort-control">
+<label for="sortSelect"><i class="fas fa-sort"></i></label>
+<select id="sortSelect" class="sort-select">
+<option value="date-desc">Newest First</option>
+<option value="date-asc">Oldest First</option>
+<option value="name-asc">Name (A-Z)</option>
+<option value="name-desc">Name (Z-A)</option>
+</select>
+</div>
+<button id="adminLoginBtn" class="admin-btn">
+<i class="fas fa-user-shield"></i> Admin
+</button>
+</div>
+</div>
+
+<!-- Admin Controls (hidden by default) -->
+<div id="adminControls" class="admin-controls" style="display: none;">
+<button id="addPasmBtn" class="primary-btn">
+<i class="fas fa-plus"></i> Add PASM
+</button>
+<button id="logoutBtn" class="secondary-btn">
+<i class="fas fa-sign-out-alt"></i> Logout
+</button>
+</div>
+
+<!-- PASM Container -->
+<div id="pasmContainer" class="pdf-list">
+<!-- PASM files will be loaded here dynamically -->
+</div>
+
+<div id="emptyState" class="empty-state" style="display: none;">
+<i class="fa-regular fa-file"></i>
+<p>No PASM files available</p>
+</div>
+
+<div id="noResultsState" class="empty-state" style="display: none;">
+<i class="fas fa-search"></i>
+<p>No results found for your search</p>
+</div>
+</section>
+
+<!-- Admin Login Modal -->
+<div id="loginModal" class="modal">
+<div class="modal-content">
+<span class="close">&times;</span>
+<h2><i class="fas fa-lock"></i> Admin Login</h2>
+<form id="loginForm">
+<div class="form-group">
+<label>Username</label>
+<input type="text" id="username" required>
+</div>
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="password" required>
+</div>
+<button type="submit" class="primary-btn">Login</button>
+</form>
+</div>
+</div>
+
+<!-- Add/Edit PASM Modal -->
+<div id="pasmModal" class="modal">
+<div class="modal-content">
+<span class="close">&times;</span>
+<h2 id="pasmModalTitle"><i class="fas fa-file-pdf"></i> Add PASM</h2>
+<form id="pasmForm">
+<input type="hidden" id="pasmId">
+<div class="form-group">
+<label>Title</label>
+<input type="text" id="pasmTitle" required>
+</div>
+<div class="form-group">
+<label>Publication Date</label>
+<input type="date" id="pasmDate" required>
+</div>
+<div class="form-group">
+<label>Description</label>
+<textarea id="pasmDescription" rows="3"></textarea>
+</div>
+<div class="form-group">
+<label>PASM File</label>
+<input type="file" id="pasmFile" accept=".pdf">
+<div id="pasmPreview" class="pdf-preview"></div>
+</div>
+<div class="form-actions">
+<button type="submit" class="primary-btn">Save</button>
+<button type="button" class="secondary-btn" onclick="closePasmModal()">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+
+<footer>
+<div class="social-media">
+<a href="https://www.facebook.com/nlcindialtd/" target="_blank">
+<i class="fab fa-facebook"></i>
+</a>
+<a href="https://in.linkedin.com/in/nlc-india-limited-nlcil-148a53210?trk=public_post_feed-actor-name" target="_blank">
+<i class="fab fa-linkedin"></i>
+</a>
+<a href="https://www.instagram.com/nlcindialtd" target="_blank">
+<i class="fab fa-instagram"></i>
+</a>
+<a href="https://www.youtube.com/channel/UCFfwas-cr65ECpDALqd-poA" target="_blank">
+<i class="fab fa-youtube"></i>
+</a>
+<a href="https://x.com/nlcindialimited" target="_blank">
+<i class="fab fa-x-twitter"></i>
+</a>
+<a href="https://www.threads.com/@nlcindialtd" target="_blank">
+<i class="fab fa-threads"></i>
+</a>
+</div>
+<p>
+Corporate Office,
+Block-1, Neyveli Township,
+Cuddalore District,
+Tamilnadu - 607801.
+</p>
+<p>© 2026 NLCIL Corporate Communication Department</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="pasm.js"></script>
+
+</body>
+</html>

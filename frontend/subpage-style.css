@@ -1,0 +1,409 @@
+/* ===========================
+   SUBPAGE SHARED STYLES
+   =========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #1e3a8a;
+    --secondary-blue: #3b82f6;
+    --accent-gold: #f59e0b;
+    --dark-navy: #0f172a;
+    --light-gray: #f1f5f9;
+    --medium-gray: #64748b;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+    scroll-behavior: smooth;
+    zoom: 80%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.7;
+    color: #333;
+    background-color: var(--light-gray);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-navy) 100%);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo {
+    color: var(--white);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.logo p {
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 400;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.logoimg {
+    height: 90px;
+    width: auto;
+    margin-right: 1.5rem;
+    filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    transition: var(--transition);
+}
+
+
+
+/* ===========================
+   PAGE HERO
+   =========================== */
+.page-hero {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: var(--white);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom center no-repeat;
+    background-size: cover;
+}
+
+.page-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===========================
+   MAIN CONTENT
+   =========================== */
+.main-content {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content-section {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--secondary-blue);
+}
+
+.content-section h2 {
+    color: var(--primary-blue);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.content-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-gold);
+}
+
+.content-section h3 {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.content-section p {
+    color: var(--medium-gray);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.content-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+.content-section li {
+    padding: 0.75rem 0 0.75rem 2rem;
+    position: relative;
+    color: var(--medium-gray);
+    line-height: 1.8;
+}
+
+.content-section li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    color: var(--accent-gold);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* ===========================
+   INFO BOXES
+   =========================== */
+.info-boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.info-box {
+    background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border-top: 4px solid var(--secondary-blue);
+}
+
+.info-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.info-box h3 {
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.info-box p {
+    color: var(--medium-gray);
+    margin-bottom: 0;
+}
+
+/* ===========================
+   CONTACT FORM / INFO
+   =========================== */
+.contact-info {
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin: 3rem 0;
+}
+
+.contact-info h3 {
+    color: var(--white);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.contact-info p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.contact-info a {
+    color: var(--accent-gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: #fbbf24;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+footer {
+    background: linear-gradient(135deg, var(--dark-navy) 0%, var(--primary-blue) 100%);
+    color: var(--white);
+    padding: 3rem 2rem 1.5rem;
+    text-align: center;
+    border-top: 3px solid var(--accent-gold);
+    margin-top: 4rem;
+}
+
+footer p {
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.social-media{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+}
+
+.social-media a{
+text-decoration:none;
+color:white;
+font-size:16px;
+display:flex;
+align-items:center;
+gap:8px;
+transition:0.3s;
+}
+
+.social-media a i{
+font-size:20px;
+}
+
+.social-media a:hover{
+color:#facc15;
+}
+.back-btn{
+    display: inline-block;
+    text-decoration: none;
+    background: #3b82f6;
+    color: white;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: 0.3s ease;
+}
+
+/* Hover effect for desktop */
+.back-btn:hover{
+    background:#f59e0b;
+    transform: translateY(-2px);
+}
+
+/* Mobile responsive */
+@media (max-width: 791px){
+    .back-btn{
+        display: block;
+        position: absolute;
+        top: 1.2rem;
+        right: 2rem;
+        z-index: 1001;
+        padding: 8px 20px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+}
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+    .page-hero h1 {
+        font-size: 2rem;
+    }
+
+    .page-hero p {
+        font-size: 1rem;
+    }
+
+    .content-section {
+        padding: 2rem 1.5rem;
+    }
+
+    .content-section h2 {
+        font-size: 1.5rem;
+    }
+
+    header .container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .info-boxes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .main-content {
+        padding: 2rem 1rem;
+    }
+
+    .content-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width:768px){
+
+.social-media{
+flex-direction:row;
+align-items:center;
+gap:12px;
+}
+
+.social-media a{
+font-size:15px;
+}
+
+.social-media a i{
+font-size:18px;
+}
+
+footer{
+padding:25px 15px;
+}
+}
